@@ -1,0 +1,389 @@
+<!-- beginmdl | Add: Material Design Lite | http://www.getmdl.io/started/index.html -->
+	<!-- $ bower install --save material-design-lite -- >
+<link rel="stylesheet" href="../bower_components/material-design-lite/material.min.css">
+<script src="../bower_components/material-design-lite/material.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- CDN hosted for colors & themes --> <!-- http://www.getmdl.io/customize/index.html -->
+<!--<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.blue_grey-yellow.min.css" /> -->
+<!-- Uncomment this line to addback MDL
+<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css">
+<script src="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<!-- endmdl -->
+<link rel="import"     href="../../../bower_components/polymer/polymer.html">
+<link rel="import"     href="../../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import"     href="../../../bower_components/firebase-element/firebase-document.html">
+<link rel="import"     href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import"     href="../../../bower_components/iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import"     href="../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
+<link rel="import"     href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import"     href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import"     href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import"     href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import"     href="../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import"     href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import"     href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import"     href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import"     href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+<!-- Not yet working
+<script                src ="../../../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+<script                src ="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import"     href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import"     href="../../../bower_components/hot-table/hot-table.html">
+<link rel="import"     href="../../../bower_components/sortable-table/sortable-table.html">
+<link rel="stylesheet" href="../../../bower_components/sortable-table/css/bootstrap.css" shim-shadowdom>
+-->
+
+<dom-module id="my-sp-campaign">
+  <style xis="custom-style">
+		/*paper-card*/
+    body {
+      background-color: var(--paper-grey-50);
+    }
+    #cards {
+      @apply(--layout-vertical);
+      @apply(--center-justified);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    paper-card {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+		paper-checkbox {
+			padding: 5px;
+		}
+		paper-radio-button {
+			display: block;
+		}
+    .avatar {
+      display: inline-block;
+      height: 64px;
+      width: 64px;
+      border-radius: 50%;
+      background: var(--paper-pink-500);
+      color: white;
+      line-height: 64px;
+      font-size: 30px;
+      text-align: center;
+    }
+    .fancy .title {
+      position: absolute;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-indigo-500);
+    }
+    .fancy img {
+      width: 100%;
+    }
+    .fancy .big {
+      font-size: 22px;
+      padding: 8px 0 16px;
+      color: var(--google-grey-500);
+    }
+    .fancy .medium {
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+		/*paper-tabs*/
+		:root {
+			--paper-tabs-selection-bar-color: var(--default-primary-color);
+			/*--paper-tabs: {
+				background-color: red;
+			}*/
+		}
+  </style>
+  <template>
+		
+		<firebase-collection
+      xorder-by-child="height"
+      xlimit-to-first="3"
+      location="https://torrid-heat-2303.firebaseio.com/dex/categories"
+      data="{{categories}}"
+		></firebase-collection>
+		<firebase-document
+			location="https://torrid-heat-2303.firebaseio.com/dex/categories"
+			data="{{categoriesDoc}}"></firebase-document>
+		
+		<paper-card heading="LAUNCH A NEW SALES CAMPAIGN!" class="pink">
+      <div class="card-content">
+				<p>Use this form to setup and start your new <span>{{vendorName}}</span> campaign.</p>
+			</div>
+		</paper-card>
+		<paper-card heading="Name your campaign." xclass="pink">
+      <div class="card-content">
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--5-col mdl-grid--no-spacing">
+						<paper-input
+							 value="{{campaignName}}"
+							 label="Campaign Name"
+							 char-counter
+							 xauto-validate
+							 pattern="[a-zA-Z]*"
+							 maxlength="30"
+							 error-message="Letters, numbers, dashes and underscores only"
+						></paper-input>
+					</div>
+				</div>
+				<p>
+					Campaign names should be different from product names. Because one product can have
+					multiple campaigns. For example, if your product is named: "MyProduct", you could name your
+					campaign: "MyProduct-01" or "MyProduct-NewYork-01" if you want to launch a campaign to, say,
+					test market your product in New York City.
+				</p>
+			</div>
+		</paper-card>
+		<paper-card heading="Describe the product." xclass="pink">
+      <div class="card-content">
+				<p>Tell us your company and product's name and briefly describe the product in 250 characters or less.</p>
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--5-col mdl-grid--no-spacing">
+						<paper-input 
+							 value="{{clientName}}"
+							 xclass="short"
+							 label="Company Name"
+							 char-counter
+							 xauto-validate
+							 pattern="[a-zA-Z]*"
+							 maxlength="30"
+							 error-message="Letters, numbers, dashes and underscores only"
+						></paper-input>
+					</div>
+					<div class="mdl-cell mdl-cell--1-col mdl-grid--no-spacing"></div>
+					<div class="mdl-cell mdl-cell--5-col mdl-grid--no-spacing">
+						<paper-input 
+							 value="{{productName}}"
+							 xclass="short"
+							 label="Product Name"
+							 char-counter
+							 xauto-validate
+							 pattern="[a-zA-Z]*"
+							 maxlength="30"
+							 error-message="Letters, numbers, dashes and underscores only"
+						></paper-input>
+					</div>
+				</div>
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--12-col mdl-grid--no-spacing">
+						<paper-textarea
+							value="{{productDescription}}"
+							xclass="short"
+							label="Product Description"
+							char-counter
+							xauto-validate
+							xpattern="[a-zA-Z]*"
+							maxlength="250"
+							xerror-message="Letters, numbers, dashes and underscores only"
+						></paper-textarea>
+					</div>
+				</div>
+			</div>
+		</paper-card>
+		<paper-card heading="What will our job be?" xclass="pink">
+      <div class="card-content">
+				<p>Toggle both switches to &ldquo;on&rdquo; if you want us to do both.</p>
+				<div class="layout horizontal">
+					<div class="flex-1"></div>
+					<div class="flex-1"><paper-toggle-button></paper-toggle-button></div>
+					<div class="flex-9">We want <span>{{vendorName}}</span> to <strong>SCHEDULE SALES APPOINTMENTS</strong> for our sales team.</div>
+					<div class="flex-1"></div>
+				</div>
+				<div class="layout horizontal">
+					<div class="flex-2"></div>
+					<div class="flex-3">
+						<paper-input label="Commission"><div prefix>$</div></paper-input>
+					</div>
+					<div class="flex-7"></div>
+				</div>
+				<div class="layout horizontal">
+					<div class="flex-2"></div>
+					<div class="flex-9">How much are you willing to pay per appointment?</div>
+					<div class="flex-1"></div>
+				</div>
+				<div style="height:40px"></div>
+				<div class="layout horizontal">
+					<div class="flex-1"></div>
+					<div class="flex-1"><paper-toggle-button></paper-toggle-button></div>
+					<div class="flex-9">We want <span>{{vendorName}}</span> to <strong>SELL OUR PRODUCT</strong> directly and professionally by phone.</div>
+					<div class="flex-1"></div>
+				</div>
+				<div class="layout horizontal">
+					<div class="flex-2"></div>
+					<div class="flex-3">
+						<paper-input label="Commission"><div prefix>$</div></paper-input>
+					</div>
+					<div class="flex-7"></div>
+				</div>
+				<div class="layout horizontal">
+					<div class="flex-2"></div>
+					<div class="flex-9">How much are you willing to pay per product sale?</div>
+					<div class="flex-1"></div>
+				</div>
+			</div>
+		</paper-card>
+		<paper-card heading="Who will supply leads?" xclass="pink">
+      <div class="card-content">
+				<p>As above, toggle both switches to &ldquo;on&rdquo; if both.</p>
+				<div class="layout horizontal">
+					<div class="flex-1"></div>
+					<div class="flex-1"><paper-toggle-button></paper-toggle-button></div>
+					<div class="flex-9"><span>{{vendorName}}</span> will supply sales leads from its own sources.</div>
+					<div class="flex-1"></div>
+				</div>
+				<div style="height:20px"></div>
+				<div class="layout horizontal">
+					<div class="flex-1"></div>
+					<div class="flex-1"><paper-toggle-button></paper-toggle-button></div>
+					<div class="flex-9">We will supply leads to <span>{{vendorName}}</span> in a spreadsheet.</div>
+					<div class="flex-1"></div>
+				</div>
+			</div>
+		</paper-card>
+		<paper-card heading="Who are your target clients?" xclass="pink">
+      <div class="card-content">
+				<p>Scroll through all tabs and tell us to whom you wish to sell your product or service.</p>
+				<!-- <paper-dropdown-menu> not working-->
+				<paper-tabs selected="{{selected}}" scrollable>							
+					<template is="dom-repeat" items="[[categories]]" xas="category">
+						<paper-tab>[[item.displayName]]</paper-tab>
+					</template>
+				</paper-tabs>
+				<div style="height:25px"></div>
+				<iron-pages selected="{{selected}}">
+					<template is="dom-repeat" items="[[categories]]" as="category">
+						<div class="layout vertical wrap" xhidden=false xstyle$="{{_computeSubCatDivHeight}}">
+							<template is="dom-repeat" items="[[subcategories]]" as="subcategory">
+								<paper-checkbox>[[subcategory]]</paper-checkbox>
+							</template>
+						</div>
+					</template>
+				</iron-pages>
+			</div>
+		</paper-card>
+		<paper-card heading="Who are your target clients?" xclass="pink">
+      <div class="card-content">
+				<template is="dom-repeat" items="[[categoryList]]" xas="category">
+					<p><span>[[item.cat]]</span> > <span>[[item.sub]]</span></p>
+				</template>
+			</div>
+		</paper-card>
+		<paper-card heading="What is your geographic scope?" xclass="pink">
+      <div class="card-content layout vertical">
+				<p>Tell us if your product is limited by location.</p>
+				<paper-radio-group xselected="city">
+					<paper-radio-button name="usa"  >
+						We are <strong>NOT LIMITED</strong> geographically. We can sell <strong>ANYWHERE IN THE U.S</strong>.
+					</paper-radio-button>
+					<paper-radio-button name="state">
+						Our product sales are limited to a <strong>STATE</strong> or group of states.
+					</paper-radio-button>
+					<paper-radio-button name="city" >
+						Our product sales are limited to a <strong>CITY</strong> or group of cities.
+					</paper-radio-button>
+				</paper-radio-group>
+			</div>
+		</paper-card>
+		<paper-card heading="Launch it!" xclass="pink">
+      <div class="card-content">
+				Review your campaign details. Correct any changes. Then launch it now!
+			</div>
+      <div class="card-actions">
+        <paper-button on-tap="_formCancel">Cancel</paper-button>
+        <paper-button on-tap="_formSubmit">Launch now!</paper-button>
+      </div>
+    </paper-card>
+  </template>
+</dom-module>
+
+<script>
+	(function(){		
+		Polymer({
+			is: 'my-sp-campaign',
+			properties: {
+			  //selected: Number,
+			  //categories: Object,
+				campaignName: String,
+				productName: String,
+				clientName: {
+					type: String
+					//value: "I"
+				},
+				vendorName: {
+					type: String,
+					value: "SalesPro"
+				},
+				subcategories: {
+					type: Object,
+				  computed: "_computeSubcat(categories, selected)"
+				},
+				categoryList: {
+					type: Array,
+					computed: "_computeCategoryList(categoriesDoc)"
+				}
+			},
+			behaviors: [
+				Polymer.IronFormElementBehavior,
+				Polymer.IronValidatableBehavior
+			],
+			listeners: {
+				'input': '_onInput'
+			},
+			_onInput: function() {
+				this.value = this.$.input.value;
+			},
+			// Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
+			// attribute automatically, which should be used for styling.
+			_getValidity: function() {
+				return this.value != '';
+			},
+			_computeSubcat: function(cat, sel) {
+				//return Object.keys(cat[sel]['subcategories']);
+				//
+				var ob = cat[sel]['subcategories'];
+				var keys = Object.keys(ob);
+				var i = keys.length;
+				var ar = [];
+				while (i--) {
+					//ar.push (ob[keys[i]]);
+					ar.push (keys[i]);
+				}
+				return ar.reverse();
+				//
+			},
+			_computeSubCatDivHeight: function() {
+				return "height:600px;";
+			},
+			_computeCategoryList: function(r) {
+				var out=[],keysSub,keys=Object.keys(r),j,i=keys.length;keys.reverse();
+				while(i--) {
+					keysSub = Object.keys(r[keys[i]]["subcategories"]);
+					j = keysSub.length;keysSub.reverse();
+					while(j--) {
+						out.push({cat:r[keys[i]]["displayName"],sub:[keysSub[j]]});
+					}
+				}
+	 			return out;
+				/*console.log("HERE I AM!!!! " + JSON.stringify(r));
+				console.log(i);
+				console.log(r);
+				return ["A","B","C"];*/
+			},
+			/*
+			_computesc: function(sub) {
+				console.log(sub);
+				return JSON.stringify(sub);
+			}
+			*/
+			_formCancel: function() {
+				console.log("CANCEL FORM");
+			},
+			_formSubmit: function() {
+				console.log("SUBMIT FORM");
+			}	
+		});
+	})();
+</script>

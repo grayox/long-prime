@@ -1,0 +1,67 @@
+<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="../../../paper-styles/paper-styles.html">
+<link rel="import" href="../../../paper-styles/demo-pages.html">
+<link rel="import" href="../../../paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="../../../aha-table/src/aha-table.html">
+<dom-module id="my-crud-table">
+	
+	<style is="custom-style">
+		input {
+			padding: 0.4em;
+			font-size: 16px;
+			margin: 15px 0;
+		}
+	</style>
+	
+	<template>
+		<h4>Demo: <code>< aha-table ></code></h4>
+		<div class="vertical-section vertical-section-container centered">
+			<aha-table 
+								  id="raw"
+								  selectable
+									copyable
+									removable
+									movable
+									seachable
+									pagesize="20"
+									pagesizetitle="Page Size:"
+									summarytitle="Viewing"
+			></aha-table>
+		</div>
+	</template>
+
+</dom-module>
+
+<script>
+	(function() {
+		Polymer({
+			is: 'my-crud-table',
+			properties: {
+				// value: String,
+			  // mode: Boolean
+			},
+			attached: function(){
+				var dates    = ['2012-12-21', '2013-2-15', '2014-3-8'],
+						titles   = ["gym", "cafe", "work", "bar", "park"],
+						types    = ["private", "public"],
+						contents = ["do it best", "just do it", "do as you wish", "no stop"],
+						enableds = [true, false];
+
+				var now = new Date();
+				var events = [];
+				for (var i = 0; i<1000; i++) {
+						events.push({
+								title  : titles  [Math.ceil(Math.random()*titles.length)-1],
+								date   : dates   [Math.ceil(Math.random()*dates.length)-1],
+								type   : types   [Math.ceil(Math.random()*types.length)-1],
+								content: contents[Math.ceil(Math.random()*contents.length)-1],
+								enabled: enableds[Math.ceil(Math.random()*enableds.length)-1]
+						});
+				};
+				this.$.raw.data = events;				
+			}
+		});
+	})();
+</script>
